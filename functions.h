@@ -1,5 +1,5 @@
-#include <stdlib.h>
-#include <cpu.h>
+#include "src_de_base/stdlib.h"
+#include "src_de_base/cpu.h"
 
 #define PORT_COM 0x3d4
 #define PORT_DON 0x3d5

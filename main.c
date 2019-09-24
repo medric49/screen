@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "src_de_base/stdio.h"
+#include "src_de_base/stdlib.h"
 #include "functions.h"
 
 

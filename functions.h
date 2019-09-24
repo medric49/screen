@@ -1,8 +1,10 @@
-#include "src_de_base/stdlib.h"
-#include "src_de_base/cpu.h"
+#include <stdlib.h>
+#include <cpu.h>
 
 #define PORT_COM 0x3d4
 #define PORT_DON 0x3d5
 
-u_int16_t *ptr_mem(u_int32_t lig, u_int32_t col);
-void ecrit_car(u_int32_t lig, u_int32_t col, char c, u_int8_t c_text, u_int8_t c_fond, u_int8_t cli);
+uint16_t *ptr_mem(uint32_t lig, uint32_t col);
+void ecrit_car(uint32_t lig, uint32_t col, char c, uint8_t c_text, uint8_t c_fond, uint8_t cli);
+void place_curseur(uint32_t lig, uint32_t col);
+void traite_car(char c);

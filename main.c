@@ -1,14 +1,9 @@
-#include "src_de_base/stdio.h"
-#include "src_de_base/stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "functions.h"
 
-
-
-int main(int argc, char* args[]) {
-    u_int16_t *p = ptr_mem(0,0);
-    printf("%x", p);
-    
-
-    printf("\n");
+int main() {
+    uint32_t a = 2;
+    printf("%d", a);
     return 0;
 }

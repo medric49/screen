@@ -1,11 +1,11 @@
 #include "functions.h"
 
-u_int16_t *ptr_mem(u_int32_t lig, u_int32_t col) {
-    return (u_int16_t*)(2*(lig*80 + col) +0xB8000);
+uint16_t *ptr_mem(uint32_t lig, uint32_t col) {
+    return (uint16_t*)(2*(lig*80 + col) +0xB8000);
 }
 
-void ecrit_car(u_int32_t lig, u_int32_t col, char c, u_int8_t c_text, u_int8_t c_fond, u_int8_t cli) {
-    u_int16_t* addr = ptr_mem(lig, col);
+void ecrit_car(uint32_t lig, uint32_t col, char c, uint8_t c_text, uint8_t c_fond, uint8_t cli) {
+    uint16_t* addr = ptr_mem(lig, col);
     *addr = c | (cli<<15) | (c_fond<<12) | (c_text<<8) ;
 }
 
@@ -19,7 +19,32 @@ void efface_ecran() {
     }
 }
 
-void place_curseur(u_int32_t lig, u_int32_t col) {
-    outb(PORT_COM, 0x0F);
-    outb(PORT_DON, 0x0E);
+void place_curseur(uint32_t lig, uint32_t col) {
+    uint16_t pos =(uint16_t)(lig*80+col);
+    outb(0x0F, PORT_COM);
+    outb((uint8_t)((pos<<8)>>8), PORT_DON)
+    outb(0x0E, PORT_COM);
+    outb((uint8_t)(pos>>8), PORT_DON)
+}
+
+void traite_car(char c) {
+    uint8_t code = (uint8_t)c;
+    if ( code >= 32 && code <= 126 ) {
+        ecrit_car(lig, col, c, 15, 0, 0);
+    } else {
+        switch (code) {
+            case 8:
+              break;
+            case 9:
+              break;
+            case 10:
+              break;
+            case 12:
+              break;
+            case 13:
+              break;
+            default:
+        }
+    }
+
 }

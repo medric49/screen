@@ -21,6 +21,5 @@ void efface_ecran() {
 
 void place_curseur(u_int32_t lig, u_int32_t col) {
     outb(PORT_COM, 0x0F);
-
     outb(PORT_DON, 0x0E);
 }

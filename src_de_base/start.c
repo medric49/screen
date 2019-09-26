@@ -1,14 +1,8 @@
 #include <cpu.h>
 #include <inttypes.h>
-<<<<<<< HEAD
-=======
 #include <stdio.h>
-#include "../functions.h"
+#include "../screen.c"
 
-uint32_t lig = 0;
-uint32_t col = 0;
-
->>>>>>> 312742dbeba639ce4661626d7accc668a932f91f
 // on peut s'entrainer a utiliser GDB avec ce code de base
 // par exemple afficher les valeurs de x, n et res avec la commande display
 
@@ -28,8 +22,8 @@ uint32_t fact(uint32_t n)
 
 void kernel_start(void)
 {
-    uint32_t x = 32;
-    printf("%d",x);
+    efface_ecran();
+    printf("Medric\nBruel\nSonwa");
     /*
     uint32_t x = fact(5);
     // quand on saura gerer l'ecran, on pourra afficher x

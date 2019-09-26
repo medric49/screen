@@ -31,7 +31,7 @@ void traite_car(char c, uint32_t* lig, uint32_t* col) {
     uint8_t code = (uint8_t) c;
 
     if ( code >= 32 && code <= 126 ) {
-        ecrit_car(lig, col, c, 15, 0, 0);
+        ecrit_car(*lig, *col, c, 15, 0, 0);
         *col = (*col+1)%80;
         if (*col == 0){
           *lig ++;
@@ -65,4 +65,8 @@ void traite_car(char c, uint32_t* lig, uint32_t* col) {
     }
     place_curseur(*lig, *col);
 
+}
+
+void defilement() {
+  
 }

@@ -1,6 +1,5 @@
 #include <cpu.h>
 #include <inttypes.h>
-
 // on peut s'entrainer a utiliser GDB avec ce code de base
 // par exemple afficher les valeurs de x, n et res avec la commande display
 

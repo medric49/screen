@@ -1,9 +1,19 @@
 #include <cpu.h>
 #include <inttypes.h>
+<<<<<<< HEAD
+=======
+#include <stdio.h>
+#include "../functions.h"
+
+uint32_t lig = 0;
+uint32_t col = 0;
+
+>>>>>>> 312742dbeba639ce4661626d7accc668a932f91f
 // on peut s'entrainer a utiliser GDB avec ce code de base
 // par exemple afficher les valeurs de x, n et res avec la commande display
 
 // une fonction bien connue
+/*
 uint32_t fact(uint32_t n)
 {
     uint32_t res;
@@ -14,16 +24,22 @@ uint32_t fact(uint32_t n)
     }
     return res;
 }
+ */
 
 void kernel_start(void)
 {
+    uint32_t x = 32;
+    printf("%d",x);
+    /*
     uint32_t x = fact(5);
     // quand on saura gerer l'ecran, on pourra afficher x
     (void)x;
     // on ne doit jamais sortir de kernel_start
+    */
     while (1) {
         // cette fonction arrete le processeur
         hlt();
     }
+
 }
 

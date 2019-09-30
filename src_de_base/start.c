@@ -24,6 +24,7 @@ void kernel_start(void)
 {
     efface_ecran();
     printf("Medric\nBruel\nSonwa");
+    defilement();
     /*
     uint32_t x = fact(5);
     // quand on saura gerer l'ecran, on pourra afficher x

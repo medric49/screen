@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <cpu.h>
+#include <string.h>
 
 #define PORT_COM 0x3d4
 #define PORT_DON 0x3d5
@@ -13,6 +14,7 @@ uint16_t *ptr_mem(uint32_t lig, uint32_t col);
 void ecrit_car(uint32_t lig, uint32_t col, char c, uint8_t c_text, uint8_t c_fond, uint8_t cli);
 void place_curseur(uint32_t lig, uint32_t col);
 void traite_car(char c);
+void defilement();
 void console_putbytes(char *chaine, int32_t taille);
 
 
@@ -83,6 +85,19 @@ void traite_car(char c) {
         }
     }
     place_curseur(lig0, col0);
+}
+
+void defilement() {
+  uint16_t *l0 = ptr_mem(0,0);
+  uint16_t *l1 = ptr_mem(1,0);
+  memmove(l0, l1, 2*70*25);
+  int j;
+  for(j=0; j<80; j++) {
+    *ptr_mem(24,j) = 32 | (0<<15) | (0<<12) | (15<<8);
+  }
+  lig0 = 24;
+  col0 = 0;
+  place_curseur(lig0, col0);
 }
 
 void console_putbytes(char *chaine, int32_t taille) {

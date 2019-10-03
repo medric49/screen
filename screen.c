@@ -8,6 +8,10 @@
 uint32_t lig0 = 0;
 uint32_t col0 = 0;
 
+uint8_t c_text0 = 13;
+uint8_t c_fond0 = 1;
+uint8_t cli0 = 0;
+
 
 
 uint16_t *ptr_mem(uint32_t lig, uint32_t col);
@@ -52,7 +56,7 @@ void traite_car(char c) {
     uint8_t code = (uint8_t) c;
 
     if ( code >= 32 && code <= 126 ) {
-        ecrit_car(lig0, col0, c, 15, 0, 0);
+        ecrit_car(lig0, col0, c, c_text0, c_fond0, cli0);
         col0 = (col0+1)%80;
         if (col0 == 0){
           lig0 ++;

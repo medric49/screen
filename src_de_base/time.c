@@ -1,12 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <cpu.h>
+#include <segment.h>
+#include <string.h>
 #include <screen.h>
 
 #include <time.h>
 
-uint64_t t = 0;
+size_t t = 0;
 uint32_t QUARTZ = 0x1234DD;
 uint8_t CLOCKFREQ = 50;
 
@@ -21,15 +24,22 @@ void print_top_right(char *txt, size_t length) {
 void tic_PIT() {
     outb(0x20, 0x20); // Previent le controleur qu'on commence un traitant
     t++;
+    char hours[12];
+    sprintf(hours, "%ds", (t*50)/1000 );
+    print_top_right(hours, strlen(hours));
 }
 
-void init_traitant_IT(int32_t num_IT, void(*traitant)(void) ) {
-    uint16_t *pos = 0x1000 + 32; // Position du traitant d'interruption
+void init_traitant_IT(int8_t num_IT, void(*traitant)(void) ) {
+    uint64_t *pos = (uint64_t*) (0x1000 + num_IT*2 ); // Position du traitant d'interruption
 
+    uint32_t addrT = (uint32_t)(*traitant);
+    uint16_t secondT = (uint16_t) (addrT>>16);
+    uint16_t firstT = (uint16_t)( addrT - ((uint32_t)secondT<<16) );
 
+    uint32_t first = (uint32_t)( firstT | (KERNEL_CS<<16)) ;
+    uint32_t second =  (uint32_t)((uint16_t)0x8E00 ) | ( (uint32_t)secondT << 16);
+    *pos = ((uint64_t)first<<32)|second;
 }
-
-
 
 void param_horloge() {
     outb(0x34, 0x43);
@@ -41,6 +51,8 @@ void param_horloge() {
 
 void masque_IRQ(uint32_t num_IRQ, bool masque) {
     uint8_t masques = inb(0x21); // Recupère les masques d'interruption
-    outb(masques | (1<32) , 0x21); // Demasque le masque sur l'interruption 32, celle de l'horloge
-
+    if (masque == 1)
+        outb( masques | (1<<num_IRQ) , 0x21);
+    else
+        outb( masques & (0<<num_IRQ) , 0x21);
 }

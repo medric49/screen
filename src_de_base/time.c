@@ -11,7 +11,7 @@
 
 size_t t = 0;
 uint32_t QUARTZ = 0x1234DD;
-uint8_t CLOCKFREQ = 50;
+uint32_t CLOCKFREQ = 50;
 
 
 void print_top_right(char *txt, size_t length) {
@@ -25,20 +25,20 @@ void tic_PIT() {
     outb(0x20, 0x20); // Previent le controleur qu'on commence un traitant
     t++;
     char hours[12];
-    sprintf(hours, "%ds", (t*50)/1000 );
+    sprintf(hours, "%ds", (t*20)/1000 );
     print_top_right(hours, strlen(hours));
 }
 
 void init_traitant_IT(int8_t num_IT, void(*traitant)(void) ) {
-    uint64_t *pos = (uint64_t*) (0x1000 + num_IT*2 ); // Position du traitant d'interruption
+    uint64_t *pos = (uint64_t*) (0x1000 + num_IT*8 ); // Position du traitant d'interruption
 
-    uint32_t addrT = (uint32_t)(*traitant);
+    uint32_t addrT = (uint32_t)(traitant);
     uint16_t secondT = (uint16_t) (addrT>>16);
-    uint16_t firstT = (uint16_t)( addrT - ((uint32_t)secondT<<16) );
+    uint16_t firstT = (uint16_t)( addrT - (((uint32_t)secondT)<<16) );
 
     uint32_t first = (uint32_t)( firstT | (KERNEL_CS<<16)) ;
-    uint32_t second =  (uint32_t)((uint16_t)0x8E00 ) | ( (uint32_t)secondT << 16);
-    *pos = ((uint64_t)first<<32)|second;
+    uint32_t second =  (uint32_t)((uint16_t)0x8E00 ) | ( ((uint32_t)secondT) << 16);
+    *pos = (((uint64_t)second)<<32)|first;
 }
 
 void param_horloge() {

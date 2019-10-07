@@ -46,7 +46,7 @@ void param_horloge() {
     uint32_t tmp1 = QUARTZ / CLOCKFREQ;
     uint8_t tmp2 = (uint8_t)(tmp1 % 256);
     outb(tmp2, 0x40);
-    outb((uint8_t)(tmp1-tmp2), 0x40);
+    outb( (uint8_t)((tmp1-tmp2)>>8), 0x40);
 }
 
 void masque_IRQ(uint32_t num_IRQ, bool masque) {

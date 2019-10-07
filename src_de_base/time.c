@@ -23,9 +23,31 @@ void print_top_right(char *txt, size_t length) {
 
 void tic_PIT() {
     outb(0x20, 0x20); // Previent le controleur qu'on commence un traitant
-    t++;
+    t+=20;
+    int tmp = t/1000;
+
+    int h = tmp/3600;
+    int m = (tmp%3600)/60;
+    int s = tmp%60; 
     char hours[12];
-    sprintf(hours, "%ds", (t*20)/1000 );
+
+    char sh[3];
+    char sm[3];
+    char ss[3];
+    if(h<10)
+        sprintf(sh, "0%d",h);
+    else
+        sprintf(sh, "%d",h);
+    if(m<10)
+        sprintf(sm, "0%d",m);
+    else
+        sprintf(sm, "%d",m);
+    if(s<10)
+        sprintf(ss, "0%d",s);
+    else
+        sprintf(ss, "%d",s);
+    sprintf(hours, "%s:%s:%s",sh, sm, ss);
+    
     print_top_right(hours, strlen(hours));
 }
 

@@ -79,13 +79,15 @@ void traite_car(char c) {
               break;
         }
     }
+    if(lig0 >= 25)
+          defilement();
     place_curseur(lig0, col0);
 }
 
 void defilement() {
   uint16_t *l0 = ptr_mem(0,0);
   uint16_t *l1 = ptr_mem(1,0);
-  memmove(l0, l1, 2*70*25);
+  memmove(l0, l1, 2*80*24);
   int j;
   for(j=0; j<80; j++) {
     *ptr_mem(24,j) = 32 | (0<<15) | (0<<12) | (15<<8);

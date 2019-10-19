@@ -6,7 +6,6 @@ void init_processus() {
     tableProcessus[0].pid = 0;
     sprintf(tableProcessus[0].nom, "idle");
     tableProcessus[0].etat = ELU;
-    
     tableProcessus[1].pid = 1;
     sprintf(tableProcessus[1].nom, "proc1");
     tableProcessus[1].etat = ACTIVABLE;
@@ -32,15 +31,13 @@ void proc1() {
 }
 
 void ordonnance() {
-    actifProcess->etat = ACTIVABLE;
     if(actifProcess->pid == 0) {
-        ctx_sw(actifProcess->registres, tableProcessus[1].registres);
         actifProcess = tableProcessus+1;
+        ctx_sw(tableProcessus[0].registres, tableProcessus[1].registres);
     } else {
-        ctx_sw(actifProcess->registres, tableProcessus[0].registres);
         actifProcess = tableProcessus;
+        ctx_sw(tableProcessus[1].registres, tableProcessus[0].registres);
     }
-    actifProcess->etat = ELU;
 }
 
 char* mon_nom() {

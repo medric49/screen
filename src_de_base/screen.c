@@ -6,6 +6,10 @@
 #define PORT_COM 0x3d4
 #define PORT_DON 0x3d5
 
+#define TOP_LINE 0
+#define START_LINE 1
+#define START_COL 0
+
 uint32_t lig0 = 0;
 uint32_t col0 = 0;
 
@@ -22,16 +26,17 @@ void ecrit_car(uint32_t lig, uint32_t col, char c, uint8_t c_text, uint8_t c_fon
     *addr = c | (cli<<15) | (c_fond<<12) | (c_text<<8) ;
 }
 
-void efface_ecran() {
+void efface_ecran(uint8_t tout) {
     int i;
     int j;
-    for(i=0; i< 25; i++) {
+
+    for(i = (tout==0?START_LINE:TOP_LINE); i< 25; i++) {
         for(j=0; j<80; j++) {
             *ptr_mem(i,j) = 32 | (0<<15) | (0<<12) | (15<<8);
         }
     }
-    lig0 = 0;
-    col0 = 0;
+    lig0 = START_LINE;
+    col0 = START_COL;
     place_curseur(lig0, col0);
 }
 
@@ -70,9 +75,7 @@ void traite_car(char c) {
               col0 = 0;
               break;
             case 12:
-              efface_ecran();
-              lig0 = 0;
-              col0 = 0;
+              efface_ecran(0);
               break;
             case 13:
               col0 = 0;
@@ -85,15 +88,15 @@ void traite_car(char c) {
 }
 
 void defilement() {
-  uint16_t *l0 = ptr_mem(0,0);
-  uint16_t *l1 = ptr_mem(1,0);
-  memmove(l0, l1, 2*80*24);
+  uint16_t *l0 = ptr_mem(START_LINE,START_COL);
+  uint16_t *l1 = ptr_mem(START_LINE+1,START_COL);
+  memmove(l0, l1, 2*80*(25 - (START_LINE + 1) ));
   int j;
   for(j=0; j<80; j++) {
     *ptr_mem(24,j) = 32 | (0<<15) | (0<<12) | (15<<8);
   }
   lig0 = 24;
-  col0 = 0;
+  col0 = START_COL;
   place_curseur(lig0, col0);
 }
 

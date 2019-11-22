@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <process.h>
 #include <malloc.c.h>
+#include <cpu.h>
 
 void init_processus() {
     maxpid = -1;
@@ -9,7 +10,7 @@ void init_processus() {
     endActivable = NULL;
 
     char nom[7] = "idle";
-    for(int i = 1; i < NOMBREDEPROCESSUS; i++) {
+    for(int i = 0; i < NOMBREDEPROCESSUS; i++) {
         if(i != 0)
             sprintf(nom, "proc%d", i);
         cree_processus(proc, nom);
@@ -63,7 +64,9 @@ int mon_pid() {
 void proc() {
     for (;;) {
         printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-        ordonnance();
+        sti();
+        hlt();
+        cli();
     }
 }
 

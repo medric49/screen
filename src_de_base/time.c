@@ -6,6 +6,7 @@
 #include <segment.h>
 #include <string.h>
 #include <screen.h>
+#include <process.h>
 
 #include <time.h>
 
@@ -49,6 +50,7 @@ void tic_PIT() {
     sprintf(hours, "%s:%s:%s",sh, sm, ss);
     
     print_top_right(hours, strlen(hours));
+    ordonnance();
 }
 
 void init_traitant_IT(int8_t num_IT, void(*traitant)(void) ) {

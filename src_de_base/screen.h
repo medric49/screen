@@ -9,6 +9,6 @@ void place_curseur(uint32_t lig, uint32_t col);
 void traite_car(char c);
 void defilement();
 void console_putbytes(char *chaine, int32_t taille);
-void efface_ecran();
+void efface_ecran(uint8_t tout);
 
 

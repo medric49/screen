@@ -17,7 +17,7 @@ void kernel_start(void)
 
     init_processus();
 
-    proc();
+    idle();
     // sti();
     while (1) {
         // cette fonction arrete le processeur

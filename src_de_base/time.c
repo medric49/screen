@@ -7,19 +7,21 @@
 #include <string.h>
 #include <screen.h>
 #include <process.h>
-
 #include <time.h>
 
 size_t t = 0;
 uint32_t QUARTZ = 0x1234DD;
 uint32_t CLOCKFREQ = 50;
 
-
 void print_top_right(char *txt, size_t length) {
     size_t i;
     for (i = 0; i<length; i++) {
         ecrit_car(0, 80-length+i, txt[i], 5, 7, 0);
     }
+}
+
+size_t getTime() {
+    return t/1000;
 }
 
 void tic_PIT() {

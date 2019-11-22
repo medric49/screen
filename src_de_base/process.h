@@ -8,18 +8,21 @@
 
 enum Etat {ELU, ACTIVABLE};
 
-typedef struct {
+typedef struct Process {
     int pid;
     char nom[TAILLEMAXNOM];
     enum Etat etat;
     int registres[5];
     int pile[TAILLEPILE];
+    struct Process* suiv;
 } Process;
 
-Process *tableProcessus[NOMBREDEPROCESSUS];
+// Process *tableProcessus[NOMBREDEPROCESSUS];
 Process* actifProcess;
 int maxpid;
 
+Process* startActivable;
+Process* endActivable;
 
 
 void ctx_sw(int* old, int* new);
@@ -29,3 +32,5 @@ void proc();
 void ordonnance();
 char* mon_nom();
 int mon_pid();
+void push(Process* process);
+Process* shift();

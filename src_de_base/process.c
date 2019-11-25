@@ -46,8 +46,10 @@ int cree_processus(void (*code)(void), char *nom) {
 void ordonnance() {
     // Process *tmp = actifProcess;
     
-    while(startEndormi != NULL && startEndormi->eveil <= getTime())
-        pushActivable(shiftEndormi());
+    while(startEndormi != NULL && startEndormi->eveil <= getTime()) {
+        Process *p = shiftEndormi();
+        pushActivable(p);
+    }
     pushActivable(actifProcess);
     actifProcess = shiftActivable();
     
@@ -77,12 +79,6 @@ void idle() {
 void proc1() {
     for (;;) {
         printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-        Process* tmp = startEndormi;
-        while(tmp != NULL) {
-            printf("\t%i -> %s\n", tmp->pid, tmp->nom);
-            tmp = tmp->suiv;
-        }
-            
         dors(1);
     }
 }
@@ -148,7 +144,6 @@ Process *shiftEndormi() {
 }
 
 void pushEndormi(Process *process) {
-    
     if(process == NULL)
         return;
     
@@ -158,6 +153,7 @@ void pushEndormi(Process *process) {
         process->suiv = NULL;
         return;
     }
+    // Si la liste n'est pas vide
 
     Process *tmp2 = NULL;
     Process *tmp = startEndormi;
@@ -167,19 +163,17 @@ void pushEndormi(Process *process) {
         tmp = tmp->suiv;
     }
         
-    
-    if(tmp2 == NULL) { // S'il y a un seul element dans la liste
-        if(tmp->eveil <= process->eveil) { // Si cet élément est prioritaire par rapport au nouvel élément
-            tmp->suiv = process;
-            process->suiv = NULL;
-        }else { // Sinon
+    if(tmp->eveil <= process->eveil) {
+        process->suiv = tmp->suiv;
+        tmp->suiv = process;
+    } else {
+        if(tmp2 == NULL) {
             process->suiv = tmp;
-            tmp->suiv = NULL;
             startEndormi = process;
         }
-    }
-    else { // S'il y a plus d'un element dans la liste
-        tmp2->suiv = process;
-        process->suiv = tmp;
+        else {
+            process->suiv = tmp;
+            tmp2->suiv = process;    
+        }
     }
 }

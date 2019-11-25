@@ -10,6 +10,10 @@ void init_processus() {
     startActivable = NULL;
     endActivable = NULL;
 
+    startEndormi = NULL;
+    
+    startMourant = NULL;
+
     cree_processus(idle, "idle");
     cree_processus(proc1, "proc1");
     cree_processus(proc2, "proc2");
@@ -35,7 +39,7 @@ int cree_processus(void (*code)(void), char *nom) {
             process->registres[1] = (int)(process->pile + TAILLEPILE - 1);
         }
         
-        // tableProcessus[maxpid] = process;
+        tableProcessus[maxpid] = process;
 
         pushActivable(process);
         return maxpid;
@@ -47,16 +51,18 @@ void ordonnance() {
     // Process *tmp = actifProcess;
     
     while(startEndormi != NULL && startEndormi->eveil <= getTime()) {
-        Process *p = shiftEndormi();
-        pushActivable(p);
+       pushActivable(shiftEndormi());
     }
     pushActivable(actifProcess);
     actifProcess = shiftActivable();
     
+    cleanMourant();
     // tableProcessus[(tmp->pid+1)%NOMBREDEPROCESSUS];
     // tmp->etat = ACTIVABLE;
     // actifProcess->etat = ELU;
     
+    
+
     if(endActivable != NULL) // S'il y a au moins un processus activable
         ctx_sw(endActivable->registres, actifProcess->registres);
 }
@@ -77,22 +83,19 @@ void idle() {
 }
 
 void proc1() {
-    for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-        dors(1);
-    }
+    printf("[%s] pid = %i\n", mon_nom(), mon_pid());
+    dors(0);
+    fin_processus();
 }
 void proc2() {
-    for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-        dors(2);
-    }
+    printf("[%s] pid = %i\n", mon_nom(), mon_pid());
+    dors(0);
+    fin_processus();
 }
 void proc3() {
-    for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-        dors(3);
-    }
+    printf("[%s] pid = %i\n", mon_nom(), mon_pid());
+    dors(0);
+    fin_processus();
 }
 
 void dors(uint32_t nbr_secs) {
@@ -102,6 +105,31 @@ void dors(uint32_t nbr_secs) {
     pushEndormi(actifProcess);
     actifProcess = shiftActivable();
 
+    ctx_sw(tmp->registres, actifProcess->registres);
+}
+
+void fin_processus() {
+    printf("** wanna die %s\n", actifProcess->nom);
+    
+    Process *p = startActivable;
+    printf("Actif process : \n");
+    while(p!= NULL) {
+        printf("%s -> %i\n", p->nom, p->pid);
+        p = p->suiv;
+    }
+    
+
+    Process *tmp = actifProcess;
+    pushMourant(actifProcess);
+    actifProcess = shiftActivable();
+
+    printf("Dying process : \n");
+    p = startMourant;
+    while(p!= NULL) {
+        printf("%s -> %i\n", p->nom, p->pid);
+        p = p->suiv;
+    }
+    
     ctx_sw(tmp->registres, actifProcess->registres);
 }
 
@@ -175,5 +203,25 @@ void pushEndormi(Process *process) {
             process->suiv = tmp;
             tmp2->suiv = process;    
         }
+    }
+}
+
+void pushMourant(Process *process) {
+    if(process == NULL)
+        return;
+    process->etat = MOURANT;
+    process->suiv = startMourant;
+    startMourant = process;
+}
+
+void cleanMourant() {
+    Process *tmp = NULL;
+    while(startMourant != NULL) {
+        tmp = startMourant->suiv;
+        tableProcessus[tmp->pid] = NULL;
+        printf("*** Avant free\n");
+        free(startMourant);
+        printf("*** Apres free\n");
+        startMourant = tmp;
     }
 }

@@ -36,6 +36,7 @@ int cree_processus(void (*code)(void), char *nom) {
         process->eveil = 0;
         if(maxpid != 0) {
             process->pile[TAILLEPILE - 1] = (int)code;
+            //process->pile[TAILLEPILE - 2] = (int)fin_processus;
             process->registres[1] = (int)(process->pile + TAILLEPILE - 1);
         }
         
@@ -108,28 +109,13 @@ void dors(uint32_t nbr_secs) {
     ctx_sw(tmp->registres, actifProcess->registres);
 }
 
-void fin_processus() {
-    printf("** wanna die %s\n", actifProcess->nom);
-    
+void fin_processus() {    
     Process *p = startActivable;
-    printf("Actif process : \n");
-    while(p!= NULL) {
-        printf("%s -> %i\n", p->nom, p->pid);
-        p = p->suiv;
-    }
     
-
     Process *tmp = actifProcess;
     pushMourant(actifProcess);
     actifProcess = shiftActivable();
 
-    printf("Dying process : \n");
-    p = startMourant;
-    while(p!= NULL) {
-        printf("%s -> %i\n", p->nom, p->pid);
-        p = p->suiv;
-    }
-    
     ctx_sw(tmp->registres, actifProcess->registres);
 }
 
@@ -218,10 +204,8 @@ void cleanMourant() {
     Process *tmp = NULL;
     while(startMourant != NULL) {
         tmp = startMourant->suiv;
-        tableProcessus[tmp->pid] = NULL;
-        printf("*** Avant free\n");
+        tableProcessus[startMourant->pid] = NULL;
         free(startMourant);
-        printf("*** Apres free\n");
         startMourant = tmp;
     }
 }

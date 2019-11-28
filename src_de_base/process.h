@@ -14,7 +14,7 @@ typedef struct Process {
     char nom[TAILLEMAXNOM];
     enum Etat etat;
     int registres[5];
-    int pile[TAILLEPILE];
+    uint32_t pile[TAILLEPILE];
     struct Process* suiv;
     int eveil;
 } Process;

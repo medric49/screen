@@ -35,10 +35,10 @@ int cree_processus(void (*code)(void), char *nom) {
         process->etat = ACTIVABLE;
         process->eveil = 0;
         if(maxpid != 0) {
-            process->pile[TAILLEPILE - 1] = (uint32_t)code;
-            process->pile[TAILLEPILE - 3] = (uint32_t)fin_processus;
+            process->pile[TAILLEPILE - 1] = (uint32_t)fin_processus;
+            process->pile[TAILLEPILE - 2] = (uint32_t)code;
             //*(uint32_t *)( (void *)(process->pile + TAILLEPILE - 2) - 2 ) = (uint32_t)fin_processus;
-            process->registres[1] = (int)(process->pile + TAILLEPILE - 1);
+            process->registres[1] = (int)(process->pile + TAILLEPILE - 2);
         }
         
         tableProcessus[maxpid] = process;
@@ -86,9 +86,7 @@ void idle() {
 
 void proc1() {
     printf("[%s] pid = %i\n", mon_nom(), mon_pid());
-    for(int i = 0; i<5; i++ ) {
-        printf("Pile %d -> %d \n", i, actifProcess->pile[TAILLEPILE - 1 - i]);
-    }
+
     dors(5);
     //fin_processus();
 }
@@ -114,7 +112,6 @@ void dors(uint32_t nbr_secs) {
 }
 
 void fin_processus() {
-    printf("** Wanna die\n");
     dors(2);
 
     Process *tmp = actifProcess;
